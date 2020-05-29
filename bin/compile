@@ -42,6 +42,12 @@ ENV_DIR=$3
 
 echo "*****> BUILD_DIR: $BUILD_DIR"
 ls $BUILD_DIR
+# Is Procfile present?
+if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
+    echo "       Procfile does not exist."
+else
+    echo "       Procfile exists."
+fi
 echo "*****>"
 
 
