@@ -12,7 +12,10 @@
 #
 #     $ bin/compile <build-dir> <cache-dir> <env-path>
 
-echo "------> Using custom buildpack."
+echo "*****> Using custom buildpack."
+echo "       Can I find out if there's a Procfile present?"
+echo "       pwd:"
+pwd
 
 # Fail fast and fail hard.
 set -eo pipefail
