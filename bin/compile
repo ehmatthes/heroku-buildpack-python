@@ -12,6 +12,8 @@
 #
 #     $ bin/compile <build-dir> <cache-dir> <env-path>
 
+echo "------> Using custom buildpack."
+
 # Fail fast and fail hard.
 set -eo pipefail
 
