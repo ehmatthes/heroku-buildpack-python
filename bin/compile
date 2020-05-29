@@ -45,6 +45,9 @@ ls $BUILD_DIR
 # Is Procfile present?
 if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "       Procfile does not exist."
+    # Generate Procfile.
+    touch "$BUILD_DIR/Procfile"
+    echo "web: gunicorn learning_log.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
 else
     echo "       Procfile exists."
 fi
