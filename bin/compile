@@ -16,6 +16,9 @@ echo "*****> Using custom buildpack."
 echo "       Can I find out if there's a Procfile present?"
 echo "       pwd:"
 pwd
+echo "files:"
+ls -alh
+echo "*****>"
 
 # Fail fast and fail hard.
 set -eo pipefail
