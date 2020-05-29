@@ -41,6 +41,9 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 echo "*****> BUILD_DIR: $BUILD_DIR"
+ls BUILD_DIR
+echo "*****>"
+
 
 # Export Path variables, for use in sub-scripts.
 export BUILD_DIR CACHE_DIR ENV_DIR
