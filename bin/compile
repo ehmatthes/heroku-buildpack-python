@@ -41,7 +41,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 echo "*****> BUILD_DIR: $BUILD_DIR"
-ls BUILD_DIR
+ls $BUILD_DIR
 echo "*****>"
 
 
