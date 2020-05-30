@@ -51,6 +51,8 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
 
     project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
     echo "Project path: $project_path"
+    project_name=$($project_path | sed s:/tmp/build_[a-z0-9]*/:: | sed s:/settings.py::)
+    echo "Project name: $project_name"
     #project_name=$($project_path | sed s*/settings.py** | sed s*./**)
     #echo "Project name: $project_path $project_name"
 else
