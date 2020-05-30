@@ -50,8 +50,9 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "web: gunicorn learning_log.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
 
     project_path=$(find . -maxdepth 5 -type f -name settings.py)
-    project_name=$($project_path | sed s*/settings.py** | sed s*./**)
-    echo "Project name: $project_path $project_name"
+    echo "Project path: $project_path"
+    #project_name=$($project_path | sed s*/settings.py** | sed s*./**)
+    #echo "Project name: $project_path $project_name"
 else
     echo "       Procfile exists."
 fi
