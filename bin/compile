@@ -46,8 +46,8 @@ ls $BUILD_DIR
 if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "       Procfile does not exist."
     # Generate Procfile.
-    touch "$BUILD_DIR/Procfile"
-    echo "web: gunicorn learning_log.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
+    #touch "$BUILD_DIR/Procfile"
+    #echo "web: gunicorn learning_log.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
 
     project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
     echo "Project path: $project_path"
@@ -55,6 +55,10 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "Project name: $project_name"
     #project_name=$($project_path | sed s*/settings.py** | sed s*./**)
     #echo "Project name: $project_path $project_name"
+    
+    # Generate the Procfile.
+    touch "$BUILD_DIR/Procfile"
+    echo "web: gunicorn $project_name.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
 else
     echo "       Procfile exists."
 fi
