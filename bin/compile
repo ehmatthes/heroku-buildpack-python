@@ -49,7 +49,7 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     touch "$BUILD_DIR/Procfile"
     echo "web: gunicorn learning_log.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
 
-    project_path=$(find . -maxdepth 5 -type f -name settings.py)
+    project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
     echo "Project path: $project_path"
     #project_name=$($project_path | sed s*/settings.py** | sed s*./**)
     #echo "Project name: $project_path $project_name"
