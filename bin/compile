@@ -361,7 +361,7 @@ fi
 
 echo "*****> printenv right before collectstatic:"
 printenv
-echo "*****> disable_cs:
+echo "*****> disable_cs:"
 echo "       DISABLE_COLLECTSTATIC: $DISABLE_COLLECTSTATIC"
 echo "*****>"
 
