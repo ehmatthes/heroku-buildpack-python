@@ -1,3 +1,17 @@
 echo "*****> in autoconfigure"
-echo "       dc: $DISABLE_COLLECTSTATIC"
-echo "*****>"
+
+
+# Check if we should autoconfigure this deploy.
+if [ $AUTOCONFIGURE_ALL ]; then
+  echo "*****> Auto-configuring this project."
+else
+  echo "*****> Auto-configure off, not auto-configuring."
+fi
+
+echo "       Starting auto-configure work."
+
+
+
+
+
+echo "       Finished auto-configure work."
