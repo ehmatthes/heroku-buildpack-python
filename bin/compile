@@ -21,6 +21,8 @@ echo "*****>"
 
 echo "*****> Is AUTOCONFIGURE_ALL set?"
 echo "       AUTOCONFIGURE_ALL: $AUTOCONFIGURE_ALL"
+echo "       printenv:"
+printenv
 echo "*****>"
 
 # Fail fast and fail hard.
