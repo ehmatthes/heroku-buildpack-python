@@ -359,6 +359,9 @@ if [[ ! "$BUILD_DIR" == "/app" ]]; then
   deep-cp /app/.heroku/src "$BUILD_DIR/.heroku/src"
 fi
 
+echo "*****> printenv right before collectstatic:"
+printenv
+echo "*****>"
 
 # Django collectstatic support.
 # The buildpack automatically runs collectstatic for Django applications.
