@@ -365,6 +365,11 @@ echo "*****> disable_cs:"
 echo "       DISABLE_COLLECTSTATIC: $DISABLE_COLLECTSTATIC"
 echo "*****>"
 
+# Call my own autoconfigure script.
+(( start=$(nowms) ))
+sub_env "$BIN_DIR/steps/autoconfigure"
+mtime "autoconfigure.time" "${start}"
+
 # Django collectstatic support.
 # The buildpack automatically runs collectstatic for Django applications.
 # This is the cause for the majority of build failures on the Python platform.
