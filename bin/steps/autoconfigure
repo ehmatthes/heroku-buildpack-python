@@ -6,7 +6,7 @@ if [ $AUTOCONFIGURE_ALL ]; then
   echo "*****> Auto-configuring this project."
 else
   echo "*****> Auto-configure off, not auto-configuring."
-  exit 1
+  exit 0
 fi
 
 echo "       Starting auto-configure work."
