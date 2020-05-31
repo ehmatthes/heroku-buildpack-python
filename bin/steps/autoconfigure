@@ -23,6 +23,10 @@ fi
 
 # Add gunicorn to requirements.txt, if not present.
 gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
+
+echo "cat req.txt"
+cat "$BUILD_DIR/requirements.txt"
+
 if [ ! $gunicorn_present ]; then
   echo "       Adding gunicorn to requirements.txt."
   echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
