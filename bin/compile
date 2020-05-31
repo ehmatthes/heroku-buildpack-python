@@ -36,12 +36,6 @@ ENV_DIR=$3
 # Export Path variables, for use in sub-scripts.
 export BUILD_DIR CACHE_DIR ENV_DIR
 
-echo "*****> printenv"
-printenv
-echo "       cat .env"
-ls -alh "$ENV_DIR"
-echo "*****>"
-
 # Set the Buildpack's internet target for downloading Python distributions.
 # The user can provide BUILDPACK_VENDOR_URL to specify a custom target.
 # Note: this is designed for non-Heroku use, as it does not use the user-provided
