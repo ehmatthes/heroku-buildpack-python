@@ -16,16 +16,18 @@ if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     echo "web: gunicorn $project_name.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
     
     echo "       Generated Procfile with following process:"
-    echo "       web: gunicorn $project_name.wsgi --log-file -"
+    echo "         web: gunicorn $project_name.wsgi --log-file -"
 else
     echo "       Found existing Procfile."
 fi
 
 # Add gunicorn to requirements.txt, if not present.
-gunicorn_present=$(cat requirements.txt | grep -c "gunicorn")
+gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
 if [ ! $gunicorn_present ]; then
   echo "       Adding gunicorn to requirements.txt."
   echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
+else:
+  echo "       Found gunicorn in requirements.txt."
 fi
 
 
