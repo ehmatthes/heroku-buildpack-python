@@ -39,7 +39,7 @@ export BUILD_DIR CACHE_DIR ENV_DIR
 echo "*****> printenv"
 printenv
 echo "       cat .env"
-cat "$ENV_DIR/.env"
+ls -alh "$ENV_DIR"
 echo "*****>"
 
 # Set the Buildpack's internet target for downloading Python distributions.
