@@ -30,7 +30,7 @@ echo "grep"
 cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn"
 echo "gunicorn_present: $gunicorn_present"
 
-if [ $gunicorn_present eq 0 ]; then
+if [ $gunicorn_present -eq 0 ]; then
   echo "       Adding gunicorn to requirements.txt."
   echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
 else
