@@ -196,6 +196,12 @@ export PKG_CONFIG_PATH=/app/.heroku/vendor/lib/pkg-config:/app/.heroku/python/li
 # Switch to the repo's context.
 cd "$BUILD_DIR"
 
+# ***** Do autoconfigure work here.
+# Call my own autoconfigure script.
+(( start=$(nowms) ))
+sub_env "$BIN_DIR/steps/autoconfigure"
+mtime "autoconfigure.time" "${start}"
+
 # The Cache
 # ---------
 
@@ -366,9 +372,9 @@ echo "       DISABLE_COLLECTSTATIC: $DISABLE_COLLECTSTATIC"
 echo "*****>"
 
 # Call my own autoconfigure script.
-(( start=$(nowms) ))
-sub_env "$BIN_DIR/steps/autoconfigure"
-mtime "autoconfigure.time" "${start}"
+# (( start=$(nowms) ))
+# sub_env "$BIN_DIR/steps/autoconfigure"
+# mtime "autoconfigure.time" "${start}"
 
 # Django collectstatic support.
 # The buildpack automatically runs collectstatic for Django applications.
