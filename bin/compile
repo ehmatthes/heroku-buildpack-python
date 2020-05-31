@@ -19,6 +19,10 @@ echo "files:"
 ls -alh
 echo "*****>"
 
+echo "*****> Is AUTOCONFIGURE_ALL set?"
+echo "       AUTOCONFIGURE_ALL: $AUTOCONFIGURE_ALL"
+echo "*****>"
+
 # Fail fast and fail hard.
 set -eo pipefail
 
