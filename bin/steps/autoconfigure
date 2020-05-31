@@ -1,15 +1,23 @@
-echo "*****> in autoconfigure"
-
-
 # Check if we should autoconfigure this deploy.
 if [ $AUTOCONFIGURE_ALL ]; then
   echo "*****> Auto-configuring this project."
 else
-  echo "*****> Auto-configure off, not auto-configuring."
   exit 0
 fi
 
-echo "       Starting auto-configure work."
+
+# Create Procfile if not present.
+if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
+    project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
+    project_name=$(echo $project_path | sed s:/tmp/build_[a-z0-9]*/:: | sed s:/settings.py::)
+    touch "$BUILD_DIR/Procfile"
+    echo "web: gunicorn $project_name.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
+    
+    echo "       Generated Procfile with following process:"
+    echo "       web: gunicorn $project_name.wsgi --log-file -"
+else
+    echo "       Found existing Procfile."
+fi
 
 
 
