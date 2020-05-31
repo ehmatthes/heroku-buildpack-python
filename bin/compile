@@ -12,19 +12,6 @@
 #
 #     $ bin/compile <build-dir> <cache-dir> <env-path>
 
-echo "*****> Using custom buildpack."
-echo "       pwd:"
-pwd
-echo "files:"
-ls -alh
-echo "*****>"
-
-echo "*****> Is AUTOCONFIGURE_ALL set?"
-echo "       AUTOCONFIGURE_ALL: $AUTOCONFIGURE_ALL"
-echo "       printenv:"
-printenv
-echo "*****>"
-
 # Fail fast and fail hard.
 set -eo pipefail
 
@@ -364,12 +351,6 @@ if [[ ! "$BUILD_DIR" == "/app" ]]; then
   rm -fr "$BUILD_DIR/.heroku/src"
   deep-cp /app/.heroku/src "$BUILD_DIR/.heroku/src"
 fi
-
-echo "*****> printenv right before collectstatic:"
-printenv
-echo "*****> disable_cs:"
-echo "       DISABLE_COLLECTSTATIC: $DISABLE_COLLECTSTATIC"
-echo "*****>"
 
 # Call my own autoconfigure script.
 # (( start=$(nowms) ))
