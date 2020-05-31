@@ -45,22 +45,22 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-echo "*****> BUILD_DIR: $BUILD_DIR"
-ls $BUILD_DIR
-# Is Procfile present?
-if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
-    # Generate Procfile.
-    project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
-    project_name=$(echo $project_path | sed s:/tmp/build_[a-z0-9]*/:: | sed s:/settings.py::)
-    touch "$BUILD_DIR/Procfile"
-    echo "web: gunicorn $project_name.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
+# echo "*****> BUILD_DIR: $BUILD_DIR"
+# ls $BUILD_DIR
+# # Is Procfile present?
+# if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
+#     # Generate Procfile.
+#     project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
+#     project_name=$(echo $project_path | sed s:/tmp/build_[a-z0-9]*/:: | sed s:/settings.py::)
+#     touch "$BUILD_DIR/Procfile"
+#     echo "web: gunicorn $project_name.wsgi --log-file -" >> "$BUILD_DIR/Procfile"
     
-    echo "*****> Generated Procfile with following process:"
-    echo "       web: gunicorn $project_name.wsgi --log-file -"
-else
-    echo "       Found existing Procfile."
-fi
-echo "*****>"
+#     echo "*****> Generated Procfile with following process:"
+#     echo "       web: gunicorn $project_name.wsgi --log-file -"
+# else
+#     echo "       Found existing Procfile."
+# fi
+# echo "*****>"
 
 
 # Export Path variables, for use in sub-scripts.
