@@ -26,7 +26,7 @@ gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
 if [ ! $gunicorn_present ]; then
   echo "       Adding gunicorn to requirements.txt."
   echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
-else:
+else
   echo "       Found gunicorn in requirements.txt."
 fi
 
