@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Check if we should autoconfigure this deploy.
 if [ $AUTOCONFIGURE_ALL ]; then
   echo "*****> Auto-configuring this project."
