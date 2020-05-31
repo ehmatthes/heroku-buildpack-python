@@ -1,0 +1,3 @@
+echo "*****> in autoconfigure"
+echo "       dc: $DISABLE_COLLECTSTATIC"
+echo "*****>"
