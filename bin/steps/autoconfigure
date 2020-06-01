@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# If user has chosen auto configuration, this script does the following:
+# - Create a Procfile.
+# - Add gunicorn to requirements.txt.
+# - Configure ALLOWED_HOSTS setting to allow serving from Heroku.
+# - Configure database so the Heroku postgres instance works.
+# - Configure staticfiles.
+# - Other?
+
+# --- Check AUTCONFIGURE config vars ---
+
 # Check if we should autoconfigure this deploy.
 if [ $AUTOCONFIGURE_ALL ]; then
   echo "*****> Auto-configuring this project."
@@ -7,7 +17,7 @@ else
   exit 0
 fi
 
-
+# --- Procfile ---
 # Create Procfile if not present.
 if [[ ! -f "$BUILD_DIR/Procfile" ]]; then
     project_path=$(find $BUILD_DIR -maxdepth 5 -type f -name settings.py)
@@ -21,6 +31,8 @@ else
     echo "       Found existing Procfile."
 fi
 
+# --- gunicorn ---
+
 # Add gunicorn to requirements.txt, if not present.
 gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
 
@@ -31,6 +43,8 @@ else
   echo "       Found gunicorn in requirements.txt."
 fi
 
+# --- ALLOWED_HOSTS ---
+
 # Modify ALLOWED_HOSTS.
 echo "       Modifying settings.py:"
 cat "$BUILD_DIR/$project_name/settings.py" | grep ALLOWED_HOSTS
@@ -38,8 +52,18 @@ sed -i "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/$project_name
 echo "       Set ALLOWED_HOSTS = ['*']."
 cat "$BUILD_DIR/$project_name/settings.py" | grep ALLOWED_HOSTS
 
+# --- Database ---
 
+# Configure database.
+# Add psycopg2 to requirements.txt, if not present.
+psycopg2_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "psycopg2")
 
+if [ $psycopg2_present -eq 0 ]; then
+  echo "       Adding psycopg2 to requirements.txt."
+  echo "psycopg2" >> "$BUILD_DIR/requirements.txt"
+else
+  echo "       Found psycopg2 in requirements.txt."
+fi
 
 
 echo "       Finished auto-configure work."
