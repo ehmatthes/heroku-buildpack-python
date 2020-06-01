@@ -89,7 +89,7 @@ fi
 cat "$BIN_DIR/steps/static_settings_block.txt" >> $settings_file
 
 # Congifure middleware to use whitenoise.
-echo "MIDDLEWARE_CLASSES.insert(0, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
+echo "MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
 
 
 echo "       Finished auto-configure work."
