@@ -91,5 +91,9 @@ cat "$BIN_DIR/steps/static_settings_block.txt" >> $settings_file
 # Congifure middleware to use whitenoise.
 echo "MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
 
+# Create folder for static files.
+#   This should check whether static folder exists first.
+mkdir "$BUILD_DIR/$project_name/static"
+
 
 echo "       Finished auto-configure work."
