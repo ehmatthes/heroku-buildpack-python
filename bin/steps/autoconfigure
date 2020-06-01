@@ -9,7 +9,6 @@
 # - Other?
 
 # --- Check AUTCONFIGURE config vars ---
-
 # Check if we should autoconfigure this deploy.
 if [ $AUTOCONFIGURE_ALL ]; then
   echo "*****> Auto-configuring this project."
@@ -32,10 +31,8 @@ else
 fi
 
 # --- gunicorn ---
-
 # Add gunicorn to requirements.txt, if not present.
 gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
-
 if [ $gunicorn_present -eq 0 ]; then
   echo "       Adding gunicorn to requirements.txt."
   echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
@@ -44,26 +41,35 @@ else
 fi
 
 # --- ALLOWED_HOSTS ---
-
-# Modify ALLOWED_HOSTS.
+# If ALLOWED_HOSTS is currently empty, set to ['*'].
 echo "       Modifying settings.py:"
-cat "$BUILD_DIR/$project_name/settings.py" | grep ALLOWED_HOSTS
 sed -i "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/$project_name/settings.py"
-echo "       Set ALLOWED_HOSTS = ['*']."
-cat "$BUILD_DIR/$project_name/settings.py" | grep ALLOWED_HOSTS
+echo "         Set ALLOWED_HOSTS = ['*']."
 
 # --- Database ---
-
-# Configure database.
 # Add psycopg2 to requirements.txt, if not present.
 psycopg2_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "psycopg2")
-
 if [ $psycopg2_present -eq 0 ]; then
   echo "       Adding psycopg2 to requirements.txt."
   echo "psycopg2" >> "$BUILD_DIR/requirements.txt"
 else
   echo "       Found psycopg2 in requirements.txt."
 fi
+
+# Add dj-database-url to requirements.txt, if not present.
+ddu_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "dj-database-url")
+if [ $ddu_present -eq 0 ]; then
+  echo "       Adding dj-database-url to requirements.txt."
+  echo "dj-database-url" >> "$BUILD_DIR/requirements.txt"
+else
+  echo "       Found dj-database-url in requirements.txt."
+fi
+
+# Modify settings.py to use the heroku database.
+settings_file = "$BUILD_DIR/$project_name/settings.py"
+echo "import dj_database_url" >> $settings_file
+echo "DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}" >> $settings_file
+
 
 
 echo "       Finished auto-configure work."
