@@ -47,6 +47,7 @@ sed -i "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/$project_name
 echo "         Set ALLOWED_HOSTS = ['*']."
 
 # --- Database ---
+
 # Add psycopg2 to requirements.txt, if not present.
 psycopg2_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "psycopg2")
 if [ $psycopg2_present -eq 0 ]; then
@@ -71,6 +72,24 @@ settings_file="$BUILD_DIR/$project_name/settings.py"
 echo "import dj_database_url" >> $settings_file
 echo "DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}" >> $settings_file
 
+# --- Static files ---
+
+echo "       Configuring static files."
+
+# Add whitenoise to requirements.txt, if not present.
+whitenoise_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "whitenoise")
+if [ $whitenoise_present -eq 0 ]; then
+  echo "       Adding whitenoise to requirements.txt."
+  echo "whitenoise" >> "$BUILD_DIR/requirements.txt"
+else
+  echo "       Found whitenoise in requirements.txt."
+fi
+
+# Configure directories for storing static files.
+cat static_settings_block.txt >> $settings_file
+
+# Congifure middleware to use whitenoise.
+cat "MIDDLEWARE_CLASSES.insert(0, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
 
 
 echo "       Finished auto-configure work."
