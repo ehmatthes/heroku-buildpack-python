@@ -94,6 +94,7 @@ echo "MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $se
 # Create folder for static files.
 #   This should check whether static folder exists first.
 mkdir "$BUILD_DIR/$project_name/static"
+mkdir "$BUILD_DIR/static"
 
 
 echo "       Finished auto-configure work."
