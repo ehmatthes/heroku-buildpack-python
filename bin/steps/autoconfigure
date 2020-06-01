@@ -34,7 +34,7 @@ fi
 # Add gunicorn to requirements.txt, if not present.
 gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
 if [ $gunicorn_present -eq 0 ]; then
-  echo "       Adding gunicorn to requirements.txt."
+  echo "       Added gunicorn to requirements.txt."
   echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
 else
   echo "       Found gunicorn in requirements.txt."
@@ -47,27 +47,27 @@ sed -i "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/$project_name
 echo "         Set ALLOWED_HOSTS = ['*']."
 
 # --- Database ---
-
+echo "       Configuring database
 # Add psycopg2 to requirements.txt, if not present.
 psycopg2_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "psycopg2")
 if [ $psycopg2_present -eq 0 ]; then
-  echo "       Adding psycopg2 to requirements.txt."
+  echo "         Adding psycopg2 to requirements.txt."
   echo "psycopg2" >> "$BUILD_DIR/requirements.txt"
 else
-  echo "       Found psycopg2 in requirements.txt."
+  echo "         Found psycopg2 in requirements.txt."
 fi
 
 # Add dj-database-url to requirements.txt, if not present.
 ddu_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "dj-database-url")
 if [ $ddu_present -eq 0 ]; then
-  echo "       Adding dj-database-url to requirements.txt."
+  echo "         Adding dj-database-url to requirements.txt."
   echo "dj-database-url" >> "$BUILD_DIR/requirements.txt"
 else
-  echo "       Found dj-database-url in requirements.txt."
+  echo "         Found dj-database-url in requirements.txt."
 fi
 
 # Modify settings.py to use the heroku database.
-echo "       Modifying settings to use Heroku Postgres database."
+echo "         Modifying settings to use Heroku Postgres database."
 settings_file="$BUILD_DIR/$project_name/settings.py"
 echo "import dj_database_url" >> $settings_file
 echo "DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}" >> $settings_file
@@ -79,21 +79,21 @@ echo "       Configuring static files."
 # Add whitenoise to requirements.txt, if not present.
 whitenoise_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "whitenoise")
 if [ $whitenoise_present -eq 0 ]; then
-  echo "       Adding whitenoise to requirements.txt."
+  echo "         Adding whitenoise to requirements.txt."
   echo "whitenoise" >> "$BUILD_DIR/requirements.txt"
 else
-  echo "       Found whitenoise in requirements.txt."
+  echo "         Found whitenoise in requirements.txt."
 fi
 
+echo "       Configuring settings for static files."
 # Configure directories for storing static files.
 cat "$BIN_DIR/steps/static_settings_block.txt" >> $settings_file
-
 # Congifure middleware to use whitenoise.
 echo "MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
 
 # Create folder for static files.
+echo "       Creating folder to store static files."
 #   This should check whether static folder exists first.
-mkdir "$BUILD_DIR/$project_name/static"
 mkdir "$BUILD_DIR/static"
 
 
