@@ -32,7 +32,8 @@ else
 fi
 
 # Modify ALLOWED_HOSTS.
-sed -i '' "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/settings.py"
+sed -i '' "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/$project_name/settings.py"
+echo "       Set ALLOWED_HOSTS = ['*']."
 
 
 
