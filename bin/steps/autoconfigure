@@ -69,7 +69,7 @@ fi
 # Modify settings.py to use the heroku database.
 echo "         Modifying settings to use Heroku Postgres database."
 settings_file="$BUILD_DIR/$project_name/settings.py"
-echo "import dj_database_url" >> $settings_file
+echo "\n\nimport dj_database_url" >> $settings_file
 echo "DATABASES = {'default': dj_database_url.config(default='postgres://localhost')}" >> $settings_file
 
 # --- Static files ---
