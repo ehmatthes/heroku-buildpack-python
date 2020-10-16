@@ -1,19 +1,8 @@
 # Demonstration version of Heroku Buildpack: Python
 
-This is a demonstration version of the Heroku Python Buildpack. Deploying a Django project to Heroku is much simpler than deploying to a VPS such as Linode or Digital Ocean, but it still requires a number of configuration steps that could be automated. This is particularly true for people new to deployment, and for the deployment of small, simple apps.
+This is a demonstration version of the Heroku Python Buildpack. Deploying a Django project to Heroku is much simpler than deploying to a VPS such as Linode or Digital Ocean, but it still requires a number of configuration steps that could be automated. This is particularly true for people new to deployment, and for the deployment of small, simple apps. The goal of this project is to have as few steps as possible between a small to medium size Django project that runs locally on SQLite, and runs sucessfully on Heroku.
 
-This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` environment variable has been set:
-- Create a `Procfile` if there is none present.
-- Add `gunicorn` to *requirements.txt* if it's not already listed.
-- Configure `ALLOWED_HOSTS` so the project will run on Heroku. Currently this is set to `['*']`.
-- Configure the database:
-  - Add `psycopg2` and `dj-database-url` to *requirements.txt*, if they're not already listed.
-  - Configure *settings.py* to use Heroku's Postgres database.
-- Configure static files:
-  - Add `whitenoise` to *requirements.txt* if it's not already listed.
-  - Configure settings for static files.
-  - Add `whitenoise` to middleware.
-  - Create a directory for static files.
+The original vision of Heroku was to provide as seamless of a deployment process as possible, while not restraining developers. The goal of this revised buildpack is to automate initial configuration steps, but in a way that developers can then customize without having to undo any of the auto-configuration steps.
 
 # Motivation
 
@@ -38,15 +27,30 @@ These steps assume you are already using Git to manage your project, and that yo
 - Run `heroku open` to open your project in a browser.
 - You will still need to use `heroku run python manage.py migrate` to migrate your database, or `heroku run bash` to log in to a console where you can run this and any other initial deployment commands.
 
+If you are curious to try this process but don't have a small project to try it out on, you can use [this instance](https://github.com/ehmatthes/learning_log_heroku_test) of the Learning Log project from Python Crash Course.
+
+# Technical Overview
+
+This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` environment variable has been set:
+- Create a `Procfile` if there is none present.
+- Add `gunicorn` to *requirements.txt* if it's not already listed.
+- Configure `ALLOWED_HOSTS` so the project will run on Heroku. Currently this is set to `['*']`.
+- Configure the database:
+  - Add `psycopg2` and `dj-database-url` to *requirements.txt*, if they're not already listed.
+  - Configure *settings.py* to use Heroku's Postgres database.
+- Configure static files:
+  - Add `whitenoise` to *requirements.txt* if it's not already listed.
+  - Configure settings for static files.
+  - Add `whitenoise` to middleware.
+  - Create a directory for static files.
+
+All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). Please forgive my rusty Bash code. :/
+
 # Anticipated changes
 
 This should probably not be the default Python buildpack behavior, so it would need config variables to trigger auto-configuration. I would anticipate having a set of config variables, such as `AUTO_CONFIGURE_ALL`, `AUTO_CONFIGURE_DB`, `AUTO_CONFIGURE_STATIC`, and maybe one or two more if needed. This way, as a user begins to customize their deployment, they can turn any or all of these flags off and customize each aspect of deployment.
 
 I don't know if this is all specific to Django, or if it applies to other Python projects as well. If this is all Django-specific, better names might be `AUTOCONFIGURE_ALL_DJANGO` or `AUTOCONFIGURE_DJANGO_ALL`. 
-
-# Technical notes
-
-All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). Please forgive my rusty Bash code. :/
 
 # Disclaimer
 
