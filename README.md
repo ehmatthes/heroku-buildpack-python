@@ -46,7 +46,7 @@ I don't know if this is all specific to Django, or if it applies to other Python
 
 # Technical notes
 
-All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). 
+All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). Please forgive my rusty Bash code. :/
 
 # Disclaimer
 
