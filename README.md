@@ -32,7 +32,7 @@ You should not be using this buildpack to deploy a production project. This is a
 These steps assume you are already using Git to manage your project, and that you have the [Heroku CLI]() installed. To deploy your project:
 
 - Run `heroku create` from a terminal at the root project directory.
-- Run `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git#simplify_deploy`. This will tell Heroku to use this modified buildpack in place of the standard Heroku Python buildpack.
+- Run `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git`. This will tell Heroku to use this modified buildpack in place of the standard Heroku Python buildpack.
 - Run `heroku config:set AUTCONFIGURE_ALL=1`. This tells this buildpack to automatically configure your project for deployment.
 - Run `git push heroku master`.
 - Run `heroku open` to open your project in a browser.
