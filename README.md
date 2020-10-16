@@ -38,10 +38,18 @@ These steps assume you are already using Git to manage your project, and that yo
 - Run `heroku open` to open your project in a browser.
 - You will still need to use `heroku run python manage.py migrate` to migrate your database, or `heroku run bash` to log in to a console where you can run this and any other initial deployment commands.
 
+# Anticipated changes
 
+This should probably not be the default Python buildpack behavior, so it would need config variables to trigger auto-configuration. I would anticipate having a set of config variables, such as `AUTO_CONFIGURE_ALL`, `AUTO_CONFIGURE_DB`, `AUTO_CONFIGURE_STATIC`, and maybe one or two more if needed. This way, as a user begins to customize their deployment, they can turn any or all of these flags off and customize each aspect of deployment.
+
+I don't know if this is all specific to Django, or if it applies to other Python projects as well. If this is all Django-specific, better names might be `AUTOCONFIGURE_ALL_DJANGO` or `AUTOCONFIGURE_DJANGO_ALL`. 
+
+# Technical notes
+
+All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). 
 
 # Disclaimer
 
 I am the author of [Python Crash Course]() from [No Starch Press](), and one of the projects in the book involves building a simple Django project and deploying the project to Heroku. I am deeply appreciative of the service that Heroku has offered to Django developers over the years. I would love to make the deployment process simpler for my readers, but also for anyone who is new to Django, or who is looking for the simplest, reliable deployment process possible.
 
-I have answered readers' basic deployment questions for years now, but I don't have significant experience with deploying a wide range of projects, or significantly complex projects. If I have made an incorrect assumption, or missed anything else of significance, I would love to know. If you want to share feedback, please either open an issue or reach out on Twitter or email.
+I have answered readers' basic deployment questions for years now, but I don't have significant experience with deploying a wide range of projects, or significantly complex projects. If I have made any incorrect assumptions, or missed anything else of significance, I would love to know. If you want to share feedback, please either open an issue or reach out on [Twitter](https://twitter.com/ehmatthes/) or email (ehmatthes at gmail).
