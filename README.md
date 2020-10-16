@@ -4,6 +4,19 @@ This is a demonstration version of the Heroku Python Buildpack. Deploying a Djan
 
 The original vision of Heroku was to provide as seamless of a deployment process as possible, while not restraining developers. The goal of this revised buildpack is to automate initial configuration steps, but in a way that developers can then customize without having to undo any of the auto-configuration steps.
 
+For a simple Django project, you can deploy your project in these steps (assuming you're already using Git to manage your project and you already have the [Heroku CLI](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true#set-up) installed):
+
+- Run `heroku create` from a terminal at the root project directory.
+- Run `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git`.
+- Run `heroku config:set AUTCONFIGURE_ALL=1`.
+- Run `git push heroku master`.
+- Run `heroku run python manage.py migrate`.
+- Run `heroku open`.
+
+With these commands and no modification to your project itself, you should have a working project deployed to Heroku.
+
+*Note: Don't use this for a production project. This is an experimental, demonstration project.*
+
 # Motivation
 
 Heroku has been a good option for deploying Django projects for a number of years now. Experienced Django developers can read through the Heroku docs and deploy their projects with little headache. But Django beginners, and people with less deployment experience, can run into trouble for a number of reasons:
