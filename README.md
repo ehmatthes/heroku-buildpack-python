@@ -1,90 +1,47 @@
-![python](https://cloud.githubusercontent.com/assets/51578/13712821/b68a42ce-e793-11e5-96b0-d8eb978137ba.png)
+# Demonstration version of Heroku Buildpack: Python
 
-# Heroku Buildpack: Python
+This is a demonstration version of the Heroku Python Buildpack. Deploying a Django project to Heroku is much simpler than deploying to a VPS such as Linode or Digital Ocean, but it still requires a number of configuration steps that could be automated. This is particularly true for people new to deployment, and for the deployment of small, simple apps.
 
-[![Build Status](https://travis-ci.org/heroku/heroku-buildpack-python.svg?branch=master)](https://travis-ci.org/heroku/heroku-buildpack-python)
+This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` environment variable has been set:
+- Create a `Procfile` if there is none present.
+- Add `gunicorn` to *requirements.txt* if it's not already listed.
+- Configure `ALLOWED_HOSTS` so the project will run on Heroku. Currently this is set to `['*']`.
+- Configure the database:
+  - Add `psycopg2` and `dj-database-url` to *requirements.txt*, if they're not already listed.
+  - Configure *settings.py* to use Heroku's Postgres database.
+- Configure static files:
+  - Add `whitenoise` to *requirements.txt* if it's not already listed.
+  - Configure settings for static files.
+  - Add `whitenoise` to middleware.
+  - Create a directory for static files.
 
-This is the official [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks) for Python apps.
+# Motivation
 
-Recommended web frameworks include **Django** and **Flask**, among others. The recommended webserver is **Gunicorn**. There are no restrictions around what software can be used (as long as it's pip-installable). Web processes must bind to `$PORT`, and only the HTTP protocol is permitted for incoming connections.
+Heroku has been a good option for deploying Django projects for a number of years now. Experienced Django developers can read through the Heroku docs and deploy their projects with little headache. But Django beginners, and people with less deployment experience, can run into trouble for a number of reasons:
+- The Heroku documentation for initial deployment of Django projects is not always kept up to date.
+- The official documentation recommends using the `django-heroku` project, which has been archived.
+- The `django-heroku` library requires `psycopg2`, which now requires that you have Postgres installed.
+  - Rather than update the project to allow for something like `psycopg2-binary`, which doesn't require having Postgres installed, the Heroku docs recommend that people install Postgres locally, even if they aren't planning to use Postgres locally.
 
-Python packages with C dependencies that are not [available on the stack image](https://devcenter.heroku.com/articles/stack-packages) are generally not supported, unless `manylinux` wheels are provided by the package maintainers (common). For recommended solutions, check out [this article](https://devcenter.heroku.com/articles/python-c-deps) for more information.
+To put it simply, there are a number of initial deployment steps that have relatively clear default configurations. The buildpack seems like the best place to make this default configuration, rather than a third-party package that's prone to abandonment or archiving. This project is meant as a demonstration of how effectively the buildpack could handle the simplest deployment cases, while still allowing for the more customized deployment configuration that experienced developers are looking for.
 
-See it in Action
-----------------
-```
-$ ls
-my-application		requirements.txt	runtime.txt
+# Deploying your (test) project
 
-$ git push heroku master
-Counting objects: 4, done.
-Delta compression using up to 8 threads.
-Compressing objects: 100% (2/2), done.
-Writing objects: 100% (4/4), 276 bytes | 276.00 KiB/s, done.
-Total 4 (delta 0), reused 0 (delta 0)
-remote: Compressing source files... done.
-remote: Building source:
-remote:
-remote: -----> Python app detected
-remote: -----> Installing python-3.7.4
-remote: -----> Installing pip
-remote: -----> Installing SQLite3
-remote: -----> Installing requirements with pip
-remote:        Collecting flask (from -r /tmp/build_c2c067ef79ff14c9bf1aed6796f9ed1f/requirements.txt (line 1))
-remote:          Downloading ...
-remote:        Installing collected packages: Werkzeug, click, MarkupSafe, Jinja2, itsdangerous, flask
-remote:        Successfully installed Jinja2-2.10 MarkupSafe-1.1.0 Werkzeug-0.14.1 click-7.0 flask-1.0.2 itsdangerous-1.1.0
-remote:
-remote: -----> Discovering process types
-remote:        Procfile declares types -> (none)
-remote:
-```
+You should not be using this buildpack to deploy a production project. This is an experimental demonstration project, and will be changed and possibly broken without warning. That said, I welcome people trying to deploy their projects with this buildpack, and reporting any [successes or failures](https://github.com/ehmatthes/heroku-buildpack-python/issues/10).
 
-A `requirements.txt` must be present at the root of your application's repository to deploy.
+These steps assume you are already using Git to manage your project, and that you have the [Heroku CLI]() installed. To deploy your project:
 
-To specify your python version, you also need a `runtime.txt` file - unless you are using the default Python runtime version.
-
-Current default Python Runtime: Python 3.6.9
-
-Alternatively, you can provide a `setup.py` file, or a `Pipfile`.
-Using `pipenv` will generate `runtime.txt` at build time if one of the field `python_version` or `python_full_version` is specified in the `requires` section of your `Pipfile`.
-
-Specify a Buildpack Version
----------------------------
-
-You can specify the latest production release of this buildpack for upcoming builds of an existing application:
-
-    $ heroku buildpacks:set heroku/python
+- Run `heroku create` from a terminal at the root project directory.
+- Run `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git#simplify_deploy`. This will tell Heroku to use this modified buildpack in place of the standard Heroku Python buildpack.
+- Run `heroku config:set AUTCONFIGURE_ALL=1`. This tells this buildpack to automatically configure your project for deployment.
+- Run `git push heroku master`.
+- Run `heroku open` to open your project in a browser.
+- You will still need to use `heroku run python manage.py migrate` to migrate your database, or `heroku run bash` to log in to a console where you can run this and any other initial deployment commands.
 
 
-Specify a Python Runtime
-------------------------
 
-Supported runtime options include:
+# Disclaimer
 
-- `python-3.8.3`
-- `python-3.7.7`
-- `python-3.6.10`
-- `python-2.7.18`
+I am the author of [Python Crash Course]() from [No Starch Press](), and one of the projects in the book involves building a simple Django project and deploying the project to Heroku. I am deeply appreciative of the service that Heroku has offered to Django developers over the years. I would love to make the deployment process simpler for my readers, but also for anyone who is new to Django, or who is looking for the simplest, reliable deployment process possible.
 
-## Tests
-
-The buildpack tests use [Docker](https://www.docker.com/) to simulate
-Heroku's [stack images.](https://devcenter.heroku.com/articles/stack)
-
-To run the test suite:
-
-```
-make test
-```
-
-Or to test in a particular stack:
-
-```
-make test-heroku-18
-make test-heroku-16
-```
-
-The tests are run via the vendored
-[shunit2](https://github.com/kward/shunit2)
-test framework.
+I have answered readers' basic deployment questions for years now, but I don't have significant experience with deploying a wide range of projects, or significantly complex projects. If I have made an incorrect assumption, or missed anything else of significance, I would love to know. If you want to share feedback, please either open an issue or reach out on Twitter or email.
