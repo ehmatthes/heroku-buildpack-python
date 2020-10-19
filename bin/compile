@@ -15,7 +15,7 @@
 # Fail fast and fail hard.
 set -eo pipefail
 
-# Boostrap the Buildpack Standard Library.
+# Used by buildpack-stdlib's metrics features.
 export BPLOG_PREFIX="buildpack.python"
 export BUILDPACK_LOG_FILE=${BUILDPACK_LOG_FILE:-/dev/null}
 
@@ -35,23 +35,27 @@ ENV_DIR=$3
 # Export Path variables, for use in sub-scripts.
 export BUILD_DIR CACHE_DIR ENV_DIR
 
-# Set the Buildpack's internet target for downloading Python distributions.
-# The user can provide BUILDPACK_VENDOR_URL to specify a custom target.
+# Set the base URL for downloading buildpack assets like Python runtimes.
+# The user can provide BUILDPACK_S3_BASE_URL to specify a custom target.
 # Note: this is designed for non-Heroku use, as it does not use the user-provided
 # environment variable mechanism (the ENV_DIR).
-VENDOR_URL="https://lang-python.s3.amazonaws.com/$STACK"
-if [[ -n ${BUILDPACK_VENDOR_URL:-} ]]; then
-    VENDOR_URL="$BUILDPACK_VENDOR_URL"
-elif [[ -n ${USE_STAGING_BINARIES} ]]; then
-    VENDOR_URL="$USE_STAGING_BINARIES/$STACK"
+if [[ "${STACK}" == "cedar-14" ]]; then
+  # Since Cedar-14 is EOL on 2020-11-02 it's not worth migrating it to the new bucket.
+  DEFAULT_S3_BASE_URL='https://lang-python.s3.amazonaws.com'
+else
+  DEFAULT_S3_BASE_URL='https://heroku-buildpack-python.s3.amazonaws.com'
 fi
-export VENDOR_URL
+S3_BASE_URL="${BUILDPACK_S3_BASE_URL:-${DEFAULT_S3_BASE_URL}}"
+# This has to be exported since it's used by the geo-libs step which is run in a subshell.
+# TODO: Stop exporting once the geo-libs step is removed or no longer uses `sub_env`.
+export S3_BASE_URL
 
 # Default Python Versions
 # shellcheck source=bin/default_pythons
 source "$BIN_DIR/default_pythons"
 
 # Supported Python Branches
+PY39="python-3.9"
 PY38="python-3.8"
 PY37="python-3.7"
 PY36="python-3.6"
@@ -63,37 +67,13 @@ PYPY36="pypy3.6"
 
 # Which stack is used (for binary downloading), if none is provided (e.g. outside of Heroku)?
 DEFAULT_PYTHON_STACK="cedar-14"
-# If pip doesn't match this version (the version we install), run the installer.
-PIP_UPDATE="20.0.2"
-
-for file in "$BUILD_DIR/runtime.txt" "$CACHE_DIR/.heroku/python-version" ; do
-    [ -f "$file" ] || continue
-
-    version=$(tr -d '[:space:]' < "$file")
-
-    case "$version" in "$PY34"*)
-        # Python 3.4 support was dropped in pip >= 19.2.
-        PIP_UPDATE="19.1.1"
-        break
-        ;;
-    esac
-done
-
-if [[ -f "$BUILD_DIR/Pipfile" ]]; then
-    # Do not force pipenv users to re-install pipenv locally.
-    PIP_UPDATE="9.0.2"
-fi
-
-export DEFAULT_PYTHON_STACK PIP_UPDATE
-export PY37 PY36 PY35 PY27 PY34
 
 # Common Problem Warnings:
 # This section creates a temporary file in which to stick the output of `pip install`.
 # The `warnings` subscript then greps through this for common problems and guides
 # the user towards resolution of known issues.
 WARNINGS_LOG=$(mktemp)
-export WARNINGS_LOG
-export RECOMMENDED_PYTHON_VERSION=$DEFAULT_PYTHON_VERSION
+RECOMMENDED_PYTHON_VERSION=$DEFAULT_PYTHON_VERSION
 
 # The buildpack ships with a few executable tools (e.g. pip-grep, etc).
 # This installs them into the path, so we can execute them directly.
@@ -159,6 +139,10 @@ export LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LIBRARY_PAT
 export LD_LIBRARY_PATH=/app/.heroku/vendor/lib:/app/.heroku/python/lib:$LD_LIBRARY_PATH
 export PKG_CONFIG_PATH=/app/.heroku/vendor/lib/pkg-config:/app/.heroku/python/lib/pkg-config:$PKG_CONFIG_PATH
 
+# Global pip options (https://pip.pypa.io/en/stable/user_guide/#environment-variables).
+# Disable pip's warnings about EOL Python since we show our own.
+export PIP_NO_PYTHON_VERSION_WARNING=1
+
 # The Application Code
 # --------------------
 
@@ -212,7 +196,7 @@ source "$BIN_DIR/steps/hooks/pre_compile"
 # continue to use that version of Python in perpituity (warnings will be raised if
 # they are out–of–date).
 if [ -f "$CACHE_DIR/.heroku/python-version" ]; then
-  DEFAULT_PYTHON_VERSION=$(cat "$CACHE_DIR/.heroku/python-version")
+  CACHED_PYTHON_VERSION=$(cat "$CACHE_DIR/.heroku/python-version")
 fi
 
 # We didn't always record the stack version. This code is in place because of that.
@@ -222,8 +206,6 @@ else
   CACHED_PYTHON_STACK=$STACK
 fi
 
-export CACHED_PYTHON_STACK
-
 # Pipenv Python version support.
 # Detect the version of Python requested from a Pipfile (e.g. python_version or python_full_version).
 # Convert it to a runtime.txt file.
@@ -231,9 +213,14 @@ export CACHED_PYTHON_STACK
 # shellcheck source=bin/steps/pipenv-python-version
 source "$BIN_DIR/steps/pipenv-python-version"
 
-# If no runtime was provided by the user, assume the default Python runtime version.
-if [ ! -f runtime.txt ]; then
-  echo "$DEFAULT_PYTHON_VERSION" > runtime.txt
+if [[ -f runtime.txt ]]; then
+  mcount "version.reason.python.specified"
+elif [[ -n "${CACHED_PYTHON_VERSION:-}" ]]; then
+  mcount "version.reason.python.cached"
+  echo "${CACHED_PYTHON_VERSION}" > runtime.txt
+else
+  mcount "version.reason.python.default"
+  echo "${DEFAULT_PYTHON_VERSION}" > runtime.txt
 fi
 
 # Create the directory for .profile.d, if it doesn't exist.
@@ -329,7 +316,7 @@ mtime "nltk.download.time" "${start}"
 # and copying it into the proper place (the logical place to do this was early, but it must be done here).
 # In CI, $BUILD_DIR is /app.
 if [[ ! "$BUILD_DIR" == "/app" ]]; then
-  rm -fr "$BUILD_DIR/.heroku/src"
+  rm -rf "$BUILD_DIR/.heroku/src"
   deep-cp /app/.heroku/src "$BUILD_DIR/.heroku/src"
 fi
 

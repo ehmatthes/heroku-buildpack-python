@@ -1,44 +1,45 @@
-language: ruby
-dist: bionic
-sudo: required
+language: minimal
+dist: focal
 branches:
   only:
-  - master
-
-rvm:
-- 2.6.6
-before_script:
-  - gem install bundler -v 1.16.2
+  - main
 
 script:
-  - docker build --pull --tag travis-build-cedar-14 --file $(pwd)/builds/cedar-14.Dockerfile .
-  - docker run --rm -e "STACK=cedar-14" travis-build-cedar-14 bash $TESTFOLDER
-  - docker build --pull --tag travis-build-heroku-16 --file $(pwd)/builds/heroku-16.Dockerfile .
-  - docker run --rm -e "STACK=heroku-16" travis-build-heroku-16 bash $TESTFOLDER
-  - docker build --pull --tag travis-build-heroku-18 --file $(pwd)/builds/heroku-18.Dockerfile .
-  - docker run --rm -e "STACK=heroku-18" travis-build-heroku-18 bash $TESTFOLDER
+  - make test STACK="${STACK}" TEST_CMD="${TEST_CMD}"
 
 jobs:
   include:
-  - stage: Bash linting (shellcheck)
-    sudo: false
+  - name: Bash linting (shellcheck)
     script: make check
-  - stage: Hatchet Integration
-    if: env(TRAVIS_PULL_REQUEST_SLUG) = env(TRAVIS_REPO_SLUG)
-    name: Run Hatchet
-    script:
+  - name: Hatchet integration tests
+    if: env(HEROKU_API_USER) IS present AND env(HEROKU_API_KEY) IS present
+    language: ruby
+    rvm:
+      - 2.7
+    before_script:
       - bundle exec hatchet ci:setup
+    script:
       - PARALLEL_SPLIT_TEST_PROCESSES=11 bundle exec parallel_split_test spec/hatchet/
 
 env:
-  matrix:
-    - TESTFOLDER=test/run-deps
-    - TESTFOLDER=test/run-versions
-    - TESTFOLDER=test/run-features
+  jobs:
+    - STACK=cedar-14 TEST_CMD=test/run-deps
+    - STACK=cedar-14 TEST_CMD=test/run-versions
+    - STACK=cedar-14 TEST_CMD=test/run-features
+
+    - STACK=heroku-16 TEST_CMD=test/run-deps
+    - STACK=heroku-16 TEST_CMD=test/run-versions
+    - STACK=heroku-16 TEST_CMD=test/run-features
+
+    - STACK=heroku-18 TEST_CMD=test/run-deps
+    - STACK=heroku-18 TEST_CMD=test/run-versions
+    - STACK=heroku-18 TEST_CMD=test/run-features
+
+    - STACK=heroku-20 TEST_CMD=test/run-deps
+    - STACK=heroku-20 TEST_CMD=test/run-versions
+    - STACK=heroku-20 TEST_CMD=test/run-features
   global:
     - HATCHET_RETRIES=3
     - IS_RUNNING_ON_CI=true
     - HATCHET_APP_LIMIT=80
     - HATCHET_DEPLOY_STRATEGY=git
-    - secure: yjtlPE5FbVxTKnjUy/tZUBgSEf4qADD3QOxtgziuid73S0U/1IEXlMGFULsQzIjtlHKmHeywZqpVVEpthIH4RuT7uoX1Pb7SSM/g0T8fT3VoEFbFK1uYl0oZQbUS4Klxv9tPiumj8if3m6ULEGIz1X0wZcMOC0tMLwVCnwmap0E=
-    - secure: ZeFTHWwnpIKE9nAqs88ocmiQh7bKce84lilGm5J23nf3N6V4wNyLwqlkvsM008WGBCaOg9AUx7ZunasT0ANsR5gLP3eV2UUg7ILdRgV2Gy13eNRFheC4PHdN92RqQ3aKoqlIv2K999xlhVjod0NzhkQQXB6PddfQINbuU7ks6As=
