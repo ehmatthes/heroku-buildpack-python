@@ -23,6 +23,7 @@ MANAGE_FILE=${MANAGE_FILE:-fakepath}
 # Ensure that Django is explicitly specified in requirements.txt
 sp-grep -s django && DJANGO_INSTALLED=1
 
+
 if [ ! "$DISABLE_COLLECTSTATIC" ] && [ -f "$MANAGE_FILE" ] && [ "$DJANGO_INSTALLED" ]; then
     set +e
 

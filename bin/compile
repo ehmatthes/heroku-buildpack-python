@@ -32,7 +32,6 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-
 # Export Path variables, for use in sub-scripts.
 export BUILD_DIR CACHE_DIR ENV_DIR
 
@@ -333,6 +332,7 @@ if [[ ! "$BUILD_DIR" == "/app" ]]; then
   rm -fr "$BUILD_DIR/.heroku/src"
   deep-cp /app/.heroku/src "$BUILD_DIR/.heroku/src"
 fi
+
 
 # Django collectstatic support.
 # The buildpack automatically runs collectstatic for Django applications.
