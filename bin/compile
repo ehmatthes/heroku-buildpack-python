@@ -167,7 +167,6 @@ export PKG_CONFIG_PATH=/app/.heroku/vendor/lib/pkg-config:/app/.heroku/python/li
 cd "$BUILD_DIR"
 
 # ***** Do autoconfigure work here.
-# Call my own autoconfigure script.
 (( start=$(nowms) ))
 sub_env "$BIN_DIR/steps/autoconfigure"
 mtime "autoconfigure.time" "${start}"
@@ -334,11 +333,6 @@ if [[ ! "$BUILD_DIR" == "/app" ]]; then
   rm -fr "$BUILD_DIR/.heroku/src"
   deep-cp /app/.heroku/src "$BUILD_DIR/.heroku/src"
 fi
-
-# Call my own autoconfigure script.
-# (( start=$(nowms) ))
-# sub_env "$BIN_DIR/steps/autoconfigure"
-# mtime "autoconfigure.time" "${start}"
 
 # Django collectstatic support.
 # The buildpack automatically runs collectstatic for Django applications.
