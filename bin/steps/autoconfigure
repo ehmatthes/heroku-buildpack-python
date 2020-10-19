@@ -85,14 +85,14 @@ else
   echo "         Found whitenoise in requirements.txt."
 fi
 
-echo "       Configuring settings for static files."
+echo "         Configuring settings for static files."
 # Configure directories for storing static files.
 cat "$BIN_DIR/steps/static_settings_block.txt" >> $settings_file
 # Congifure middleware to use whitenoise.
 echo "MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
 
 # Create folder for static files.
-echo "       Creating folder to store static files."
+echo "         Creating directory for storing static files."
 [ ! -d "$BUILD_DIR/static" ] && mkdir "$BUILD_DIR/static"
 
 
