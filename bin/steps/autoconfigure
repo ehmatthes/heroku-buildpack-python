@@ -58,9 +58,7 @@ if [[ "$using_requirements_txt" ]]; then
   else
     echo "       Found gunicorn in requirements.txt."
   fi
-fi
-
-if [[ "$using_pipfile" ]]; then
+elif [[ "$using_pipfile" ]]; then
   gunicorn_present=$(cat "$BUILD_DIR/Pipfile" | grep -c "gunicorn")
   if [ $gunicorn_present -eq 0 ]; then
     DATA='[packages]\ngunicorn = "*"'
@@ -70,11 +68,6 @@ if [[ "$using_pipfile" ]]; then
     echo "       Found gunicorn in Pipfile."
   fi
 fi
-
-echo "pipfile:"
-echo -e $(cat "$BUILD_DIR/Pipfile")
-echo "pipfile:"
-cat Pipfile
 
 # --- ALLOWED_HOSTS ---
 # If ALLOWED_HOSTS is currently empty, set to ['*'].
