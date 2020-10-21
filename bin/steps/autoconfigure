@@ -26,11 +26,17 @@ fi
 # --- Find out if using requirements.txt or Pipfile ---
 if [[ -f "$BUILD_DIR/requirements.txt" ]]; then
   using_requirements_txt=true
-fi
-
-if [ "$using_requirements_txt" ]; then
   echo "       Found requirements.txt file."
 fi
+
+if [[ -f "$BUILD_DIR/Pipfile" ]]; then
+  using_pipfile=true
+fi
+
+if [ "$using_pipfile" ]; then
+  echo "       Found Pipfile."
+fi
+
 
 # --- Procfile ---
 # Create Procfile if not present.
