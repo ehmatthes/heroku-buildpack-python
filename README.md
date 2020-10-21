@@ -9,7 +9,7 @@ For a simple Django project, you can deploy your project in these steps (assumin
 - Run `heroku create` from a terminal at the root project directory.
 - Run `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git`.
 - Run `heroku config:set AUTCONFIGURE_ALL=1`.
-- Run `git push heroku master`.
+- Run `git push heroku main`.
 - Run `heroku run python manage.py migrate`.
 - Run `heroku open`.
 
@@ -36,23 +36,23 @@ These steps assume you are already using Git to manage your project, and that yo
 - Run `heroku create` from a terminal at the root project directory.
 - Run `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git`. This will tell Heroku to use this modified buildpack in place of the standard Heroku Python buildpack.
 - Run `heroku config:set AUTCONFIGURE_ALL=1`. This tells this buildpack to automatically configure your project for deployment.
-- Run `git push heroku master`.
+- Run `git push heroku main`. If your default branch is still `master`, use that name instead.
 - Run `heroku open` to open your project in a browser.
 - You will still need to use `heroku run python manage.py migrate` to migrate your database, or `heroku run bash` to log in to a console where you can run this and any other initial deployment commands.
 
-If you are curious to try this process but don't have a small project to try it out on, you can use [this instance](https://github.com/ehmatthes/learning_log_heroku_test) of the Learning Log project from Python Crash Course.
+If you are curious to try this process but don't have a small project to try it out on, you can use [this instance](https://github.com/ehmatthes/learning_log_heroku_test) of the Learning Log project from Python Crash Course. There is also a [separate version](https://github.com/ehmatthes/learning_log_heroku_test_pipfile) of the same project that uses Pipenv instead of *requirements.txt*.
 
 # Technical Overview
 
 This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` environment variable has been set:
 - Create a `Procfile` if there is none present.
-- Add `gunicorn` to *requirements.txt* if it's not already listed.
+- Add `gunicorn` to *requirements.txt* or *Pipfile* if it's not already listed.
 - Configure `ALLOWED_HOSTS` so the project will run on Heroku. Currently this is set to `['*']`.
 - Configure the database:
-  - Add `psycopg2` and `dj-database-url` to *requirements.txt*, if they're not already listed.
+  - Add `psycopg2` and `dj-database-url` to *requirements.txt* or *Pipfile*, if they're not already listed.
   - Configure *settings.py* to use Heroku's Postgres database.
 - Configure static files:
-  - Add `whitenoise` to *requirements.txt* if it's not already listed.
+  - Add `whitenoise` to *requirements.txt* or *Pipfile* if it's not already listed.
   - Configure settings for static files.
   - Add `whitenoise` to middleware.
   - Create a directory for static files.

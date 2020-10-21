@@ -154,17 +154,13 @@ cat "$BIN_DIR/steps/static_settings_block.txt" >> $settings_file
 echo "MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')" >> $settings_file
 
 # Create folder for static files.
+#   Should verify that this is a reasonable approach.
 echo "         Creating directory for storing static files."
 [ ! -d "$BUILD_DIR/static" ] && mkdir "$BUILD_DIR/static"
-
-
-
 
 # If using Pipfile, remove Pipfile.lock so it will be updated.
 if [[ "$using_pipfile" ]]; then
   rm "$BUILD_DIR/Pipfile.lock"
 fi
-
-
 
 echo "       Finished auto-configure work."
