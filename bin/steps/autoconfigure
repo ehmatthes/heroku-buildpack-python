@@ -158,4 +158,13 @@ echo "         Creating directory for storing static files."
 [ ! -d "$BUILD_DIR/static" ] && mkdir "$BUILD_DIR/static"
 
 
+
+
+# If using Pipfile, remove Pipfile.lock so it will be updated.
+if [[ "$using_pipfile" ]]; then
+  rm "$BUILD_DIR/Pipfile.lock"
+fi
+
+
+
 echo "       Finished auto-configure work."
