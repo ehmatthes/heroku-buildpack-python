@@ -72,7 +72,7 @@ if [[ "$using_pipfile" ]]; then
 fi
 
 echo "pipfile:"
-echo $(cat "$BUILD_DIR/Pipfile")
+echo -e $(cat "$BUILD_DIR/Pipfile")
 
 # --- ALLOWED_HOSTS ---
 # If ALLOWED_HOSTS is currently empty, set to ['*'].
