@@ -41,13 +41,15 @@ else
 fi
 
 # --- gunicorn ---
-# Add gunicorn to requirements.txt, if not present.
-gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
-if [ $gunicorn_present -eq 0 ]; then
-  echo "       Added gunicorn to requirements.txt."
-  echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
-else
-  echo "       Found gunicorn in requirements.txt."
+# Add gunicorn to dependencies, if not present.
+if [[ "$using_requirements_txt" ]]; then
+  gunicorn_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "gunicorn")
+  if [ $gunicorn_present -eq 0 ]; then
+    echo "gunicorn" >> "$BUILD_DIR/requirements.txt"
+    echo "       Added gunicorn to requirements.txt."
+  else
+    echo "       Found gunicorn in requirements.txt."
+  fi
 fi
 
 # --- ALLOWED_HOSTS ---
@@ -58,13 +60,15 @@ echo "         Set ALLOWED_HOSTS = ['*']."
 
 # --- Database ---
 echo "       Configuring database"
-# Add psycopg2 to requirements.txt, if not present.
-psycopg2_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "psycopg2")
-if [ $psycopg2_present -eq 0 ]; then
-  echo "         Adding psycopg2 to requirements.txt."
-  echo "psycopg2" >> "$BUILD_DIR/requirements.txt"
-else
-  echo "         Found psycopg2 in requirements.txt."
+# Add psycopg2 to dependencies, if not present.
+if [[ "$using_requirements_txt" ]]; then
+  psycopg2_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "psycopg2")
+  if [ $psycopg2_present -eq 0 ]; then
+    echo "psycopg2" >> "$BUILD_DIR/requirements.txt"
+    echo "         Added psycopg2 to requirements.txt."
+  else
+    echo "         Found psycopg2 in requirements.txt."
+  fi
 fi
 
 # Add dj-database-url to requirements.txt, if not present.
