@@ -14,6 +14,7 @@ Here are the steps:
 - There will always be conflict with README, and I will always keep mine:
   - `git checkout --ours README.md`
   - `git add README.md`
+  - Note 10/21/20: I did not have this conflict this time. Maybe it's set to always keep mine?
 - Resolve any remaining conflicts.
 - Commit changes and push this branch.
   - `git commit -am "Merged upstream changes."`
