@@ -59,6 +59,9 @@ This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` e
 
 All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). Please forgive my rusty Bash code. :/
 
+# Documentation
+- [Merging upstream changes](https://github.com/ehmatthes/heroku-buildpack-python/blob/main/my_docs/merging_upstream.md)
+
 # Anticipated changes
 
 This should probably not be the default Python buildpack behavior, so it would need config variables to trigger auto-configuration. I would anticipate having a set of config variables, such as `AUTO_CONFIGURE_ALL`, `AUTO_CONFIGURE_DB`, `AUTO_CONFIGURE_STATIC`, and maybe one or two more if needed. This way, as a user begins to customize their deployment, they can turn any or all of these flags off and customize each aspect of deployment.
