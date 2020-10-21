@@ -86,6 +86,15 @@ if [[ "$using_requirements_txt" ]]; then
   else
     echo "         Found psycopg2 in requirements.txt."
   fi
+elif [[ "$using_pipfile" ]]; then
+  psycopg2_present=$(cat "$BUILD_DIR/Pipfile" | grep -c "psycopg2")
+  if [ $psycopg2_present -eq 0 ]; then
+    DATA='[packages]\npsycopg2 = "*"'
+    awk -v r="$DATA" '{gsub(/\[packages\]/,r)}1' Pipfile | xargs -0 echo > PipfileModified && mv PipfileModified Pipfile
+    echo "       Added psycopg2 to Pipfile."
+  else
+    echo "       Found psycopg2 in Pipfile."
+  fi
 fi
 
 # Add dj-database-url to dependencies, if not present.
@@ -96,6 +105,15 @@ if [[ "$using_requirements_txt" ]]; then
     echo "dj-database-url" >> "$BUILD_DIR/requirements.txt"
   else
     echo "         Found dj-database-url in requirements.txt."
+  fi
+elif [[ "$using_pipfile" ]]; then
+  ddu_present=$(cat "$BUILD_DIR/Pipfile" | grep -c "dj-database-url")
+  if [ $ddu_present -eq 0 ]; then
+    DATA='[packages]\ndj-database-url = "*"'
+    awk -v r="$DATA" '{gsub(/\[packages\]/,r)}1' Pipfile | xargs -0 echo > PipfileModified && mv PipfileModified Pipfile
+    echo "       Added dj-database-url to Pipfile."
+  else
+    echo "       Found dj-database-url in Pipfile."
   fi
 fi
 
@@ -117,6 +135,15 @@ if [[ "$using_requirements_txt" ]]; then
     echo "whitenoise" >> "$BUILD_DIR/requirements.txt"
   else
     echo "         Found whitenoise in requirements.txt."
+  fi
+elif [[ "$using_pipfile" ]]; then
+  whitenoise_present=$(cat "$BUILD_DIR/Pipfile" | grep -c "whitenoise")
+  if [ $whitenoise_present -eq 0 ]; then
+    DATA='[packages]\nwhitenoise = "*"'
+    awk -v r="$DATA" '{gsub(/\[packages\]/,r)}1' Pipfile | xargs -0 echo > PipfileModified && mv PipfileModified Pipfile
+    echo "       Added whitenoise to Pipfile."
+  else
+    echo "       Found whitenoise in Pipfile."
   fi
 fi
 
