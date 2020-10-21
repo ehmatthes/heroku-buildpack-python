@@ -8,6 +8,12 @@
 # - Configure staticfiles.
 # - Other?
 
+# This script could be organized quite differently. ie first step could focus
+#   on modifying dependencies, then settings, etc. But I think it's much easier
+#   to reason about by focusing on each step of the configuration process.
+# For example it's better to make all changes necessary for configuring db,
+#   then static files, even if that means modifying settings file more than once.
+
 # --- Check AUTCONFIGURE config vars ---
 # Check if we should autoconfigure this deploy.
 if [ $AUTOCONFIGURE_ALL ]; then
@@ -71,13 +77,15 @@ if [[ "$using_requirements_txt" ]]; then
   fi
 fi
 
-# Add dj-database-url to requirements.txt, if not present.
-ddu_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "dj-database-url")
-if [ $ddu_present -eq 0 ]; then
-  echo "         Adding dj-database-url to requirements.txt."
-  echo "dj-database-url" >> "$BUILD_DIR/requirements.txt"
-else
-  echo "         Found dj-database-url in requirements.txt."
+# Add dj-database-url to dependencies, if not present.
+if [[ "$using_requirements_txt" ]]; then
+  ddu_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "dj-database-url")
+  if [ $ddu_present -eq 0 ]; then
+    echo "         Adding dj-database-url to requirements.txt."
+    echo "dj-database-url" >> "$BUILD_DIR/requirements.txt"
+  else
+    echo "         Found dj-database-url in requirements.txt."
+  fi
 fi
 
 # Modify settings.py to use the heroku database.
@@ -90,13 +98,15 @@ echo "DATABASES = {'default': dj_database_url.config(default='postgres://localho
 
 echo "       Configuring static files."
 
-# Add whitenoise to requirements.txt, if not present.
-whitenoise_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "whitenoise")
-if [ $whitenoise_present -eq 0 ]; then
-  echo "         Adding whitenoise to requirements.txt."
-  echo "whitenoise" >> "$BUILD_DIR/requirements.txt"
-else
-  echo "         Found whitenoise in requirements.txt."
+# Add whitenoise to dependencies, if not present.
+if [[ "$using_requirements_txt" ]]; then
+  whitenoise_present=$(cat "$BUILD_DIR/requirements.txt" | grep -c "whitenoise")
+  if [ $whitenoise_present -eq 0 ]; then
+    echo "         Adding whitenoise to requirements.txt."
+    echo "whitenoise" >> "$BUILD_DIR/requirements.txt"
+  else
+    echo "         Found whitenoise in requirements.txt."
+  fi
 fi
 
 echo "         Configuring settings for static files."
