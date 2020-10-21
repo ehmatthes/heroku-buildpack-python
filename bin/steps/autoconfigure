@@ -31,12 +31,8 @@ fi
 
 if [[ -f "$BUILD_DIR/Pipfile" ]]; then
   using_pipfile=true
-fi
-
-if [ "$using_pipfile" ]; then
   echo "       Found Pipfile."
 fi
-
 
 # --- Procfile ---
 # Create Procfile if not present.
@@ -63,6 +59,20 @@ if [[ "$using_requirements_txt" ]]; then
     echo "       Found gunicorn in requirements.txt."
   fi
 fi
+
+if [[ "$using_pipfile" ]]; then
+  gunicorn_present=$(cat "$BUILD_DIR/Pipfile" | grep -c "gunicorn")
+  if [ $gunicorn_present -eq 0 ]; then
+    DATA='[packages]\ngunicorn = "*"'
+    awk -v r="$DATA" '{gsub(/\[packages\]/,r)}1' Pipfile | xargs -0 echo > PipfileModified && mv PipfileModified Pipfile
+    echo "       Added gunicorn to Pipfile."
+  else
+    echo "       Found gunicorn in Pipfile."
+  fi
+fi
+
+echo "pipfile:"
+echo $(cat "$BUILD_DIR/Pipfile")
 
 # --- ALLOWED_HOSTS ---
 # If ALLOWED_HOSTS is currently empty, set to ['*'].
