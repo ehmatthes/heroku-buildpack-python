@@ -73,6 +73,8 @@ fi
 
 echo "pipfile:"
 echo -e $(cat "$BUILD_DIR/Pipfile")
+echo "pipfile:"
+cat Pipfile
 
 # --- ALLOWED_HOSTS ---
 # If ALLOWED_HOSTS is currently empty, set to ['*'].
