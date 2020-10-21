@@ -15,11 +15,16 @@ Here are the steps:
   - `git checkout --ours README.md`
   - `git add README.md`
 - Resolve any remaining conflicts.
-- Commit changes.
+- Commit changes and push this branch.
   - `git commit -am "Merged upstream changes."`
+  - `git push origin merge_upstream_mmddyy`
 - Deploy any test projects, using this branch.
-  - `heroku buildpacks:set https://github.com/ehmatthes/heroku-python-buildpack.git#merge_upstream_mmddyy`
+  - `heroku buildpacks:set https://github.com/ehmatthes/heroku-buildpack-python.git#merge_upstream_mmddyy`
+  - Note: If using a test project that's already been pushed, changing the buildpack to this one will allow a new push without any changes to the project itself.
 - Merge to main and push.
   - `git checkout main`
   - `git merge merge_upstream_mmddyy`
   - `git push origin main`
+- Delete temp branch
+  - `git branch -D merge_upstream_mmddyy`
+  - `git push origin --delete merge_upstream_mmddyy`
