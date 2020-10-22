@@ -29,7 +29,7 @@ To put it simply, there are a number of initial deployment steps that have relat
 
 # Deploying a project
 
-You should not be using this buildpack to deploy a production project. This is currently a demonstration project, and will be changed and possibly broken without warning. That said, I welcome people trying to deploy their projects with this buildpack, and reporting any [successes or failures](https://github.com/ehmatthes/heroku-buildpack-python/issues/10).
+You should not be using this buildpack to deploy a production project yet. This is currently a demonstration project, and will be changed and possibly broken without warning. That said, I welcome people trying to deploy their projects with this buildpack, and reporting any [successes or failures](https://github.com/ehmatthes/heroku-buildpack-python/issues/10).
 
 These steps assume you are already using Git to manage your project, and that you have the [Heroku CLI](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true#set-up) installed. To deploy your project:
 
