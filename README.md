@@ -47,7 +47,7 @@ If you are curious to try this process but don't have a small project to try it 
 This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` environment variable has been set:
 - Create a `Procfile` if there is none present.
 - Add `gunicorn` to *requirements.txt* or *Pipfile* if it's not already listed.
-- Configure `ALLOWED_HOSTS` so the project will run on Heroku. Currently this is set to `['*']`.
+- Configure `ALLOWED_HOSTS` so the project will run on Heroku. Currently this is set to `['.herokuapp.com']`.
 - Configure the database:
   - Add `psycopg2` and `dj-database-url` to *requirements.txt* or *Pipfile*, if they're not already listed.
   - Configure *settings.py* to use Heroku's Postgres database.
