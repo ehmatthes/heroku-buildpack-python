@@ -70,10 +70,10 @@ elif [[ "$using_pipfile" ]]; then
 fi
 
 # --- ALLOWED_HOSTS ---
-# If ALLOWED_HOSTS is currently empty, set to ['*'].
+# If ALLOWED_HOSTS is currently empty, set to ['.herokuapp.com'].
 echo "       Modifying settings.py:"
-sed -i "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['*']/" "$BUILD_DIR/$project_name/settings.py"
-echo "         Set ALLOWED_HOSTS = ['*']."
+sed -i "s/ALLOWED_HOSTS = \[]/ALLOWED_HOSTS = \['.herokuapp.com']/" "$BUILD_DIR/$project_name/settings.py"
+echo "         Set ALLOWED_HOSTS = ['.herokuapp.com']."
 
 # --- Database ---
 echo "       Configuring database"
