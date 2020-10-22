@@ -1,4 +1,4 @@
-# Demonstration version of Heroku Buildpack: Python
+# Simplified version of the Heroku buildpack for Python 
 
 This is a demonstration version of the Heroku Python Buildpack. Deploying a Django project to Heroku is much simpler than deploying to a VPS such as Linode or Digital Ocean, but it still requires a number of configuration steps that could be automated. This is particularly true for people new to deployment, and for the deployment of small, simple apps. The goal of this project is to have as few steps as possible between a small to medium size Django project that runs locally on SQLite, and runs sucessfully on Heroku.
 
@@ -15,7 +15,7 @@ For a simple Django project, you can deploy your project in these steps (assumin
 
 With these commands and no modification to your project itself, you should have a working project deployed to Heroku.
 
-*Note: Don't use this for a production project. This is an experimental, demonstration project.*
+*Note: Don't use this for a production project yet. This is currently a demonstration project.*
 
 # Motivation
 
@@ -27,9 +27,9 @@ Heroku has been a good option for deploying Django projects for a number of year
 
 To put it simply, there are a number of initial deployment steps that have relatively clear default configurations. The buildpack seems like the best place to make this default configuration, rather than a third-party package that's prone to abandonment or archiving. This project is meant as a demonstration of how effectively the buildpack could handle the simplest deployment cases, while still allowing for the more customized deployment configuration that experienced developers are looking for.
 
-# Deploying your (test) project
+# Deploying a project
 
-You should not be using this buildpack to deploy a production project. This is an experimental demonstration project, and will be changed and possibly broken without warning. That said, I welcome people trying to deploy their projects with this buildpack, and reporting any [successes or failures](https://github.com/ehmatthes/heroku-buildpack-python/issues/10).
+You should not be using this buildpack to deploy a production project. This is currently a demonstration project, and will be changed and possibly broken without warning. That said, I welcome people trying to deploy their projects with this buildpack, and reporting any [successes or failures](https://github.com/ehmatthes/heroku-buildpack-python/issues/10).
 
 These steps assume you are already using Git to manage your project, and that you have the [Heroku CLI](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true#set-up) installed. To deploy your project:
 
@@ -53,11 +53,10 @@ This buildpack has been modified to do the following if an `AUTOCONFIGURE_ALL` e
   - Configure *settings.py* to use Heroku's Postgres database.
 - Configure static files:
   - Add `whitenoise` to *requirements.txt* or *Pipfile* if it's not already listed.
-  - Configure settings for static files.
   - Add `whitenoise` to middleware.
   - Create a directory for static files.
 
-All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/master/bin/steps/autoconfigure). Please forgive my rusty Bash code. :/
+All of the Heroku-specific deployment configuration is done in an `autoconfigure` script, which you can see [here](https://github.com/ehmatthes/heroku-buildpack-python/blob/main/bin/steps/autoconfigure). Please forgive my rusty Bash code. :/
 
 # Documentation
 - [Merging upstream changes](https://github.com/ehmatthes/heroku-buildpack-python/blob/main/my_docs/merging_upstream.md)
